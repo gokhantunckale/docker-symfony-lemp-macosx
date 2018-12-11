@@ -1,0 +1,65 @@
+version: '3.1'
+services:
+  webserver:
+    container_name: webserver
+    image: kptnmhmt/webserver:16.04
+    restart: on-failure
+    command: bash -c "service php7.2-fpm start && nginx -g \"daemon off;\""
+    tty: true
+    depends_on:
+      - database
+    volumes:
+      - PROJE_DIZINI:/var/www/symfony:delegated
+      - /opt/composer-cache:/opt/composer-cache:delegated
+    ports:
+      - 80:80
+      - 443:443
+    extra_hosts:
+      - "symfony.prod:127.0.0.1"
+      - "symfony.test:127.0.0.1"
+      - "database:10.10.10.12"
+    networks:
+      symfony_net:
+        ipv4_address: 10.10.10.11
+
+  database:
+    container_name: database
+    image: mysql:5.7
+    restart: on-failure
+    tty: true
+    ports:
+        - 3306
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: database
+        MYSQL_USER: root
+        MYSQL_PASSWORD: root
+    extra_hosts:
+      - "webserver:10.10.10.11"
+    networks:
+      symfony_net:
+        ipv4_address: 10.10.10.12
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: on-failure
+    depends_on:
+      - database
+    container_name: phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOST: database
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+    - 8080:80
+    networks:
+      symfony_net:
+        ipv4_address: 10.10.10.13
+
+networks:
+  symfony_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.10.0/24

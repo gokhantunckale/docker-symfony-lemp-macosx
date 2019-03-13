@@ -10,10 +10,9 @@ services:
       - database
     volumes:
       - PROJE_DIZINI:/var/www/symfony:delegated
-      - /opt/composer-cache:/opt/composer-cache:delegated
     ports:
-      - 80:80
-      - 443:443
+      - 9999:80
+      - 9998:443
     extra_hosts:
       - "symfony.prod:127.0.0.1"
       - "symfony.test:127.0.0.1"
@@ -28,12 +27,12 @@ services:
     restart: on-failure
     tty: true
     ports:
-        - 3306:3306
+      - 9997:3306
     environment:
-        MYSQL_ROOT_PASSWORD: root
-        MYSQL_DATABASE: database
-        MYSQL_USER: root
-        MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MY_DATABASE_NAME
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     extra_hosts:
       - "webserver:10.10.10.11"
     networks:
@@ -52,7 +51,7 @@ services:
       PMA_USER: root
       PMA_PASSWORD: root
     ports:
-    - 8080:80
+      - 9996:80
     networks:
       symfony_net:
         ipv4_address: 10.10.10.13
@@ -63,10 +62,10 @@ services:
     restart: on-failure
     tty: true
     environment:
-      RABBITMQ_DEFAULT_USER: queue
-      RABBITMQ_DEFAULT_PASS: queue
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     ports:
-      - "5672:5672"
+      - "9995:5672"
     networks:
       symfony_net:
         ipv4_address: 10.10.10.14

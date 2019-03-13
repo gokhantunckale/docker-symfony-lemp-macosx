@@ -8,9 +8,11 @@ Macosx performans iyileştirmeleri yapıldı.
 ### Yapı
 
 - Webserver
--- Ubuntu 16.04 üzerinde Php 7.2 fpm + Nginx
+-- Ubuntu 16.04 üzerinde Php 7.3 fpm + Nginx
 - Database
--- Mysql 5.7
+-- Mysql 8.0
+- Queue
+-- Rabbitmq 3.7
 - Phpmyadmin
 
 ### Kullanım

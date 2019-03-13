@@ -9,7 +9,7 @@ services:
     depends_on:
       - database
     volumes:
-      - /Users/mehmetkaptan/projects/otomoto:/var/www/symfony:delegated
+      - PROJE_DIZINI:/var/www/symfony:delegated
       - /opt/composer-cache:/opt/composer-cache:delegated
     ports:
       - 80:80
@@ -56,6 +56,20 @@ services:
     networks:
       symfony_net:
         ipv4_address: 10.10.10.13
+
+  queue:
+    container_name: queue
+    image: rabbitmq:3.7-management
+    restart: on-failure
+    tty: true
+    environment:
+      RABBITMQ_DEFAULT_USER: queue
+      RABBITMQ_DEFAULT_PASS: queue
+    ports:
+      - "5672:5672"
+    networks:
+      symfony_net:
+        ipv4_address: 10.10.10.14
 
 networks:
   symfony_net:
